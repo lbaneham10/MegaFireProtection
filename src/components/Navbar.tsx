@@ -38,17 +38,19 @@ export default function Navbar() {
           : 'bg-transparent border-transparent py-5'
       )}
     >
-      <div className="container mx-auto px-4 md:px-6 lg:px-8">
+      <div className="w-full max-w-[1600px] mx-auto px-4 md:px-8 lg:px-12">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center group cursor-pointer">
-            <img 
-              src="/logo.jpg" 
-              alt="Mega Fire Protection" 
-              className="h-[86px] w-auto transition-transform duration-300 group-hover:scale-105"
-            />
-          </Link>
+          <div className="flex-1 flex justify-start z-10">
+            <Link to="/" className="flex items-center group cursor-pointer">
+              <img 
+                src="/logo.jpg" 
+                alt="Mega Fire Protection" 
+                className="h-[86px] w-auto transition-transform duration-300 group-hover:scale-105"
+              />
+            </Link>
+          </div>
 
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className="hidden md:flex flex-shrink-0 items-center justify-center gap-8 lg:gap-12 xl:gap-16 z-10">
             {navLinks.map((link) => (
               <Link
                 key={link.name}
@@ -72,27 +74,29 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <a 
-            href="tel:+18005550199" 
-            className="hidden md:flex flex-shrink-0 items-center gap-2 text-kr-muted-light hover:text-white transition-colors duration-200 cursor-pointer"
-          >
-            <Phone size={14} className="text-kr-red" />
-            <span className="text-sm font-semibold tracking-wider">(800) 555-0199</span>
-          </a>
+          <div className="flex-1 flex justify-end items-center z-10">
+            <div className="hidden md:flex items-center gap-8 lg:gap-12">
+              <a 
+                href="tel:+18005550199" 
+                className="flex items-center gap-3 text-kr-muted-light hover:text-white transition-colors duration-200 cursor-pointer"
+              >
+                <Phone size={18} className="text-kr-red" />
+                <span className="text-sm font-semibold tracking-widest">(800) 555-0199</span>
+              </a>
 
-          <div className="hidden md:block flex-shrink-0">
-            <Button href="/contact" variant="primary" size="sm">
-              Get a Quote
-            </Button>
+              <Button href="/contact" variant="primary" size="sm">
+                Get a Quote
+              </Button>
+            </div>
+
+            <button
+              className="md:hidden p-2 text-white hover:text-kr-red transition-colors duration-200 cursor-pointer flex-shrink-0"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
-
-          <button
-            className="lg:hidden p-2 text-white hover:text-kr-red transition-colors duration-200 cursor-pointer flex-shrink-0"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
         </div>
       </div>
 
@@ -103,7 +107,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:hidden absolute top-full left-0 right-0 bg-kr-bg/98 backdrop-blur-xl border-b border-kr-border shadow-2xl overflow-hidden"
+            className="md:hidden absolute top-full left-0 right-0 bg-kr-bg/98 backdrop-blur-xl border-b border-kr-border shadow-2xl overflow-hidden"
           >
             <div className="container mx-auto px-4 py-6 flex flex-col gap-1">
               {navLinks.map((link, i) => (
