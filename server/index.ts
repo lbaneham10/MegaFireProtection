@@ -1,5 +1,5 @@
 import express from 'express';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import Database from 'better-sqlite3';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -9,7 +9,18 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Initialize Database
+// ── CORS ──
+app.use((_req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  if (_req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
+app.use(express.json({ limit: '50kb' }));
+
+// ── Database ──
 const db = new Database('megafire.db');
 db.prepare(`
   CREATE TABLE IF NOT EXISTS messages (
@@ -24,22 +35,56 @@ db.prepare(`
   )
 `).run();
 
-// Initialize Gemini
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
+// ── Simple In-Memory Rate Limiter ──
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT = 10;  // max requests
+const RATE_WINDOW = 60_000; // per 60 seconds
 
-app.use(express.json());
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_WINDOW });
+    return false;
+  }
+  entry.count++;
+  return entry.count > RATE_LIMIT;
+}
 
-// API: Contact Form Submission
+// ── Input Validation Helpers ──
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function sanitize(str: unknown): string {
+  if (typeof str !== 'string') return '';
+  return str.trim().slice(0, 1000); // cap at 1000 chars
+}
+
+// ── API: Contact Form Submission ──
 app.post('/api/contact', (req, res) => {
-  const { name, email, phone, company, service, message } = req.body;
-  
+  const name = sanitize(req.body.name);
+  const email = sanitize(req.body.email);
+  const phone = sanitize(req.body.phone);
+  const company = sanitize(req.body.company);
+  const service = sanitize(req.body.service);
+  const message = sanitize(req.body.message);
+
+  // Validate required fields
+  if (!name || !email || !phone) {
+    return res.status(400).json({ success: false, error: 'Name, email, and phone are required.' });
+  }
+  if (!isValidEmail(email)) {
+    return res.status(400).json({ success: false, error: 'Please provide a valid email address.' });
+  }
+
   try {
     const stmt = db.prepare(`
       INSERT INTO messages (name, email, phone, company, service, message)
       VALUES (?, ?, ?, ?, ?, ?)
     `);
     stmt.run(name, email, phone, company, service, message);
-    
+
     res.json({ success: true, message: 'Message received and stored.' });
   } catch (error) {
     console.error('Database Error:', error);
@@ -47,16 +92,22 @@ app.post('/api/contact', (req, res) => {
   }
 });
 
-// API: AI Quote Assistant
+// ── API: AI Quote Assistant ──
 app.post('/api/ai-quote-assist', async (req, res) => {
-  const { message, service } = req.body;
-  
+  const clientIp = req.ip || 'unknown';
+  if (isRateLimited(clientIp)) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
+  const message = sanitize(req.body.message);
+  const service = sanitize(req.body.service);
+
   if (!process.env.GEMINI_API_KEY) {
     return res.status(500).json({ error: 'AI API Key not configured.' });
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
     const prompt = `
       You are an expert fire protection engineer at Mega Fire Protection.
       A potential client has requested a quote for "${service}".
@@ -66,10 +117,13 @@ app.post('/api/ai-quote-assist', async (req, res) => {
       Keep it high-level and encouraging.
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    
+    const result = await ai.models.generateContent({
+      model: 'gemini-2.0-flash',
+      contents: prompt,
+    });
+
+    const text = result.text ?? 'Thank you for your inquiry. Our team will review your request and respond shortly.';
+
     res.json({ ai_response: text });
   } catch (error) {
     console.error('AI Error:', error);
@@ -77,7 +131,7 @@ app.post('/api/ai-quote-assist', async (req, res) => {
   }
 });
 
-// Serve frontend in production (optional, for local we use Vite dev)
+// ── Serve frontend in production ──
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
   app.get('*', (req, res) => {

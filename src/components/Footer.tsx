@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -7,16 +7,8 @@ export default function Footer() {
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
           <div className="lg:col-span-2 space-y-5">
-            <Link to="/" className="flex items-center gap-3 group inline-flex cursor-pointer">
-              <ShieldCheck size={30} className="text-kr-red" strokeWidth={2} />
-              <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight leading-none text-white uppercase" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  MEGA FIRE
-                </span>
-                <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-kr-muted mt-0.5">
-                  Protection
-                </span>
-              </div>
+            <Link to="/" className="inline-block group cursor-pointer mb-2">
+              <img src="/logo.jpg" alt="Mega Fire Protection" className="h-[72px] w-auto transition-transform duration-300 group-hover:scale-105" />
             </Link>
             <p className="text-sm leading-relaxed text-kr-muted max-w-xs">
               Developing and implementing unique and efficient fire protection systems for industrial, commercial, and residential applications throughout Greater Los Angeles.

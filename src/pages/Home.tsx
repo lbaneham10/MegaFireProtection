@@ -2,16 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { useRef, useEffect, useState } from 'react';
 import { Button } from '../components/Button';
 import { ArrowRight, Building2, Home as HomeIcon, ShieldCheck, Clock, Award, Flame, Phone, Star, CheckCircle2, Users } from 'lucide-react';
-
-/* ── animation presets ── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
-};
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
-};
+import { fadeUp, stagger } from '../lib/animations';
 
 /* ── animated counter ── */
 function Counter({ target, suffix = '' }: { target: number; suffix?: string }) {

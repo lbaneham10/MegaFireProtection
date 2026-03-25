@@ -1,14 +1,6 @@
 import { motion } from 'motion/react';
 import { ShieldCheck, Target, Users, Award, CheckCircle2 } from 'lucide-react';
-
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
-};
-const stagger = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.12, delayChildren: 0.1 } },
-};
+import { fadeUp, stagger } from '../lib/animations';
 
 export default function About() {
   return (

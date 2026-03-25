@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ShieldCheck, Phone } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 import { Button } from './Button';
@@ -40,19 +40,12 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group cursor-pointer">
-            <div className="relative">
-              <ShieldCheck size={32} className="text-kr-red transition-transform duration-300 group-hover:scale-110" strokeWidth={2} />
-              <div className="absolute inset-0 bg-kr-red/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight leading-none text-white uppercase font-[var(--font-display)]" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                MEGA FIRE
-              </span>
-              <span className="text-[10px] font-medium tracking-[0.2em] uppercase text-kr-muted mt-0.5">
-                Protection
-              </span>
-            </div>
+          <Link to="/" className="flex items-center group cursor-pointer">
+            <img 
+              src="/logo.jpg" 
+              alt="Mega Fire Protection" 
+              className="h-[86px] w-auto transition-transform duration-300 group-hover:scale-105"
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
