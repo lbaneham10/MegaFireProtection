@@ -1,14 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Open Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
   --color-kr-bg: #050505;
-  --color-kr-panel: #111111;
-  --color-kr-border: #222222;
-  --color-kr-red: #e52e2d;
-  --color-kr-text: #f5f5f5;
-  --color-kr-muted: #888888;
+  --color-kr-panel: #0e0e0e;
+  --color-kr-panel-hover: #151515;
+  --color-kr-border: #1e1e1e;
+  --color-kr-border-hover: #2a2a2a;
+  --color-kr-red: #DC2626;
+  --color-kr-red-glow: rgba(220, 38, 38, 0.15);
+  --color-kr-red-hover: #EF4444;
+  --color-kr-text: #f0f0f0;
+  --color-kr-muted: #7a7a7a;
+  --color-kr-muted-light: #999999;
 }
 
 html {
@@ -24,15 +30,33 @@ body {
   color: var(--color-kr-text);
 }
 
+/* Smooth scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
   background: var(--color-kr-bg);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-kr-border);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-kr-muted);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Selection color */
+::selection {
+  background-color: var(--color-kr-red);
+  color: white;
 }
