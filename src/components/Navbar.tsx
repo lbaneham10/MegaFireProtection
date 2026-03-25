@@ -72,29 +72,27 @@ export default function Navbar() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-5">
-            <a 
-              href="tel:+18005550199" 
-              className="hidden md:flex items-center gap-2 text-kr-muted-light hover:text-white transition-colors duration-200 cursor-pointer"
-            >
-              <Phone size={14} className="text-kr-red" />
-              <span className="text-xs font-semibold tracking-wider">(800) 555-0199</span>
-            </a>
+          <a 
+            href="tel:+18005550199" 
+            className="hidden md:flex flex-shrink-0 items-center gap-2 text-kr-muted-light hover:text-white transition-colors duration-200 cursor-pointer"
+          >
+            <Phone size={14} className="text-kr-red" />
+            <span className="text-sm font-semibold tracking-wider">(800) 555-0199</span>
+          </a>
 
-            <div className="hidden md:block">
-              <Button href="/contact" variant="primary" size="sm">
-                Get a Quote
-              </Button>
-            </div>
-
-            <button
-              className="lg:hidden p-2 text-white hover:text-kr-red transition-colors duration-200 cursor-pointer"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+          <div className="hidden md:block flex-shrink-0">
+            <Button href="/contact" variant="primary" size="sm">
+              Get a Quote
+            </Button>
           </div>
+
+          <button
+            className="lg:hidden p-2 text-white hover:text-kr-red transition-colors duration-200 cursor-pointer flex-shrink-0"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </div>
 
